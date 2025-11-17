@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PICTURA MATERIAL INWARD — FINAL COMPLETE</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css" rel="stylesheet"/>
+
+<style>
+  :root{--brand:#0b5d88;}
+  body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; margin:0; min-height:100vh; background:linear-gradient(135deg,var(--brand),#1a9dbf);}
+  /* Login */
+  .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+  .login-card{width:100%;max-width:440px;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border-radius:14px;padding:28px;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.25);}
+  .login-card h3{margin-bottom:6px;font-weight:700;}
+  .form-control.login-input{background:rgba(255,255,255,0.14);border:none;color:#fff;}
+  .form-control.login-input::placeholder{color:rgba(255,255,255,0.85);}
+  .btn-login{background:var(--brand);border-radius:30px;border:none;padding:10px 14px;width:100%;font-weight:700;color:#fff;}
+  /* App */
+  #mainApp{display:none;background:#f6f9fb;min-height:100vh;color:#212529;padding:26px;}
+  .brand-title{color:var(--brand);font-weight:800;}
+  .card-list{border-radius:12px;background:#fff;box-shadow:0 6px 20px rgba(20,30,60,0.06);border:1px solid #eef2f6;}
+  .thumb{width:96px;height:72px;object-fit:cover;border-radius:6px;border:1px solid #e6e9ef;margin-right:6px;}
+  .nav-tabs .nav-link.active{background:var(--brand);color:#fff;border:none;border-radius:8px;}
+  .small-muted{font-size:13px;color:#6b7280;}
+  img.preview{width:100%;border-radius:8px;border:1px solid #ddd;padding:6px;background:#fff;}
+  /* responsive tweak */
+  @media(max-width:768px){
+    .thumb{width:70px;height:54px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-wrap">
+  <div class="login-card">
+    <h3 class="text-center">PICTURA MATERIAL INWARD</h3>
+    <p class="text-center small-muted">Secure Offline Login — Use <b>admin/admin123</b> or <b>data/data123</b></p>
+
+    <div class="mb-2">
+      <input id="loginUser" class="form-control login-input mb-2" placeholder="Username (admin / data)">
+      <input id="loginPass" type="password" class="form-control login-input mb-2" placeholder="Password">
+    </div>
+
+    <div class="d-grid gap-2">
+      <button id="loginBtn" class="btn btn-login">Login <i class="fa fa-right-to-bracket ms-2"></i></button>
+      <button id="demoFill" class="btn btn-outline-light">Fill Demo (data)</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="container">
+
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <div class="brand-title fs-4">PICTURA MATERIAL INWARD</div>
+      <div class="small-muted">Offline Material Entry Management</div>
+    </div>
+    <div id="userControls" class="text-end"></div>
+  </div>
+
+  <!-- DATA ENTRY AREA -->
+  <div id="dataArea" style="display:none;">
+    <div class="card card-list p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <strong>New Material Inward Entry</strong>
+        <div>
+          <button id="logoutData" class="btn btn-outline-secondary btn-sm me-2">Logout</button>
+        </div>
+      </div>
+
+      <form id="entryForm" class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label small-muted">Bill Date *</label>
+          <input id="billDate" type="date" class="form-control" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label small-muted">Party Name *</label>
+          <input id="partyName" class="form-control" placeholder="Party Name" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label small-muted">Invoice / Material *</label>
+          <input id="invoiceNo" class="form-control" placeholder="Invoice / Material" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label small-muted">Qty (Bill) *</label>
+          <input id="qtyBill" type="number" class="form-control" min="0" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label small-muted">Qty (Received) *</label>
+          <input id="qtyReceived" type="number" class="form-control" min="0" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label small-muted">Received By *</label>
+          <input id="receivedBy" class="form-control" placeholder="Received By" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label small-muted">Vehicle No</label>
+          <input id="vehicleNo" class="form-control" placeholder="Vehicle No">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label small-muted">Bill Image</label>
+          <input id="billImg" type="file" accept="image/*" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label small-muted">Material Image</label>
+          <input id="matImg" type="file" accept="image/*" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label small-muted">Driver Image</label>
+          <input id="driverImg" type="file" accept="image/*" class="form-control">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label small-muted">Remarks</label>
+          <textarea id="remarks" rows="2" class="form-control" placeholder="Remarks"></textarea>
+        </div>
+
+        <div class="col-12 text-end">
+          <button id="saveBtn" type="button" class="btn btn-success"><i class="fa fa-save me-1"></i> Save Entry</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card card-list p-3 mb-4">
+      <h6 class="mb-3">My Entries</h6>
+      <div id="myList"></div>
+      <div id="noList" class="text-center text-muted" style="display:none;">No entries yet.</div>
+    </div>
+  </div>
+
+  <!-- ADMIN AREA -->
+  <div id="adminArea" style="display:none;">
+    <div class="card card-list p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <strong>Admin Panel</strong>
+        <div>
+          <button id="exportCsv" class="btn btn-success btn-sm me-2"><i class="fa fa-file-csv me-1"></i> Export CSV</button>
+          <button id="clearAll" class="btn btn-outline-danger btn-sm me-2"><i class="fa fa-trash me-1"></i> Clear All</button>
+          <button id="logoutAdmin" class="btn btn-outline-secondary btn-sm">Logout</button>
+        </div>
+      </div>
+
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a id="tabAll" class="nav-link active" href="#">All Records</a></li>
+        <li class="nav-item"><a id="tabParty" class="nav-link" href="#">View By Party</a></li>
+      </ul>
+
+      <div id="filterBox" class="row g-2 filter-row mb-3">
+        <div class="col-md-3">
+          <label class="small-muted">From Date</label>
+          <input id="fromDate" type="date" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <label class="small-muted">To Date</label>
+          <input id="toDate" type="date" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <label class="small-muted">Party Filter</label>
+          <input id="partyFilter" class="form-control" placeholder="Filter by Party">
+        </div>
+        <div class="col-md-3">
+          <label class="small-muted">Search</label>
+          <input id="searchFilter" class="form-control" placeholder="Search party/invoice/receivedBy/vehicle/remarks">
+        </div>
+      </div>
+
+      <div id="tableBox">
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              <th style="width:110px">Date</th>
+              <th>Party</th>
+              <th>Invoice</th>
+              <th style="width:120px">Preview</th>
+              <th style="width:120px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminTable"></tbody>
+        </table>
+      </div>
+
+      <div id="partyBox" style="display:none;">
+        <div class="row">
+          <div class="col-md-4">
+            <ul id="partyList" class="list-group"></ul>
+          </div>
+          <div class="col-md-8">
+            <div id="partyBills"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- VIEW MODAL -->
+<div class="modal fade" id="viewModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modalTitle" class="modal-title">Bill Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button id="downloadPdf" class="btn btn-primary btn-sm"><i class="fa fa-file-pdf me-1"></i> Download PDF</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- libs -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script>
+(() => {
+  const ENTRIES_KEY = 'pictura_entries_final_complete';
+  const USER_KEY = 'pictura_user_final_complete';
+  const ROLE_KEY = 'pictura_role_final_complete';
+
+  const users = [
+    { u: 'admin', p: 'admin123', role: 'admin' },
+    { u: 'data', p: 'data123', role: 'data' }
+  ];
+
+  // DOM refs
+  const loginScreen = document.getElementById('loginScreen');
+  const mainApp = document.getElementById('mainApp');
+
+  // Demo fill
+  document.getElementById('demoFill').onclick = () => {
+    document.getElementById('loginUser').value = 'data';
+    document.getElementById('loginPass').value = 'data123';
+  };
+
+  // Login
+  document.getElementById('loginBtn').onclick = () => {
+    const u = document.getElementById('loginUser').value.trim().toLowerCase();
+    const p = document.getElementById('loginPass').value.trim();
+    const found = users.find(x => x.u === u && x.p === p);
+    if (!found) return Swal.fire({ icon: 'error', text: 'Invalid username/password' });
+    localStorage.setItem(USER_KEY, found.u);
+    localStorage.setItem(ROLE_KEY, found.role);
+    loadApp();
+  };
+
+  // read file to {name,data}
+  const readFileAsDataUrl = (file) => new Promise(res => {
+    if (!file) return res(null);
+    const fr = new FileReader();
+    fr.onload = e => res({ name: file.name, data: e.target.result });
+    fr.readAsDataURL(file);
+  });
+
+  // load app according to role
+  function loadApp() {
+    loginScreen.style.display = 'none';
+    document.body.style.background = '#f6f9fb';
+    mainApp.style.display = 'block';
+    const user = localStorage.getItem(USER_KEY);
+    const role = localStorage.getItem(ROLE_KEY);
+    document.getElementById('userControls').innerHTML = `<span class="badge bg-info text-dark">${user} (${role})</span>`;
+    if (role === 'admin') {
+      document.getElementById('adminArea').style.display = 'block';
+      document.getElementById('dataArea').style.display = 'none';
+      renderAdmin();
+    } else {
+      document.getElementById('dataArea').style.display = 'block';
+      document.getElementById('adminArea').style.display = 'none';
+      // set today date if empty
+      if (!document.getElementById('billDate').value) document.getElementById('billDate').value = new Date().toISOString().slice(0,10);
+      renderMyEntries();
+    }
+  }
+
+  // Save Entry
+  document.getElementById('saveBtn').onclick = async () => {
+    const billDate = document.getElementById('billDate').value.trim();
+    const party = document.getElementById('partyName').value.trim();
+    const invoice = document.getElementById('invoiceNo').value.trim();
+    const qtyBill = document.getElementById('qtyBill').value.trim();
+    const qtyRec = document.getElementById('qtyReceived').value.trim();
+    const receivedBy = document.getElementById('receivedBy').value.trim();
+
+    if (!billDate || !party || !invoice || !qtyBill || !qtyRec || !receivedBy) {
+      return Swal.fire({ icon: 'warning', text: 'Please fill required fields' });
+    }
+
+    const billFile = await readFileAsDataUrl(document.getElementById('billImg').files[0]);
+    const matFile = await readFileAsDataUrl(document.getElementById('matImg').files[0]);
+    const drvFile = await readFileAsDataUrl(document.getElementById('driverImg').files[0]);
+
+    const entry = {
+      id: 'E' + Date.now(),
+      billDate, party, invoice,
+      qtyBill: Number(qtyBill), qtyRec: Number(qtyRec),
+      receivedBy, vehicle: document.getElementById('vehicleNo').value.trim(), remarks: document.getElementById('remarks').value.trim(),
+      billFile, matFile, drvFile,
+      createdBy: localStorage.getItem(USER_KEY) || 'data',
+      createdAt: new Date().toLocaleString()
+    };
+
+    const arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]');
+    arr.unshift(entry);
+    localStorage.setItem(ENTRIES_KEY, JSON.stringify(arr));
+
+    Swal.fire({ icon: 'success', text: 'Saved', timer: 1000, showConfirmButton: false });
+    document.getElementById('entryForm').reset();
+    document.getElementById('billDate').value = new Date().toISOString().slice(0,10);
+    renderMyEntries();
+  };
+
+  // Render my entries (data user)
+  function renderMyEntries() {
+    const arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]');
+    const user = localStorage.getItem(USER_KEY);
+    const my = arr.filter(x => x.createdBy === user);
+    const list = document.getElementById('myList');
+    list.innerHTML = '';
+    if (!my.length) { document.getElementById('noList').style.display = 'block'; return; }
+    document.getElementById('noList').style.display = 'none';
+    my.forEach(e => {
+      const d = document.createElement('div');
+      d.className = 'border rounded p-2 mb-2';
+      d.innerHTML = `<div class="d-flex justify-content-between align-items-start">
+        <div>
+          <b>${escapeHtml(e.party)}</b> <small class="text-muted">(${escapeHtml(e.invoice)})</small><br>
+          <small class="text-muted">${e.billDate} • Qty: ${e.qtyBill}/${e.qtyRec}</small>
+        </div>
+        <div><button class="btn btn-sm btn-outline-primary" data-id="${e.id}">View</button></div>
+      </div>`;
+      d.querySelector('button').onclick = () => showBill(e.id);
+      list.appendChild(d);
+    });
+  }
+
+  // escape helper
+  function escapeHtml(s) { if (!s && s !== 0) return ''; return s.toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+  // Render Admin with filters
+  function renderAdmin() {
+    const arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]').slice();
+    const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+
+    const fFrom = document.getElementById('fromDate').value;
+    const fTo = document.getElementById('toDate').value;
+    const fParty = document.getElementById('partyFilter').value.trim().toLowerCase();
+    const fSearch = document.getElementById('searchFilter').value.trim().toLowerCase();
+
+    let filtered = arr;
+    if (fFrom) filtered = filtered.filter(x => x.billDate >= fFrom);
+    if (fTo) filtered = filtered.filter(x => x.billDate <= fTo);
+    if (fParty) filtered = filtered.filter(x => x.party.toLowerCase().includes(fParty));
+    if (fSearch) {
+      filtered = filtered.filter(x => {
+        const hay = (x.party + ' ' + x.invoice + ' ' + x.receivedBy + ' ' + (x.vehicle||'') + ' ' + (x.remarks||'')).toLowerCase();
+        return hay.includes(fSearch);
+      });
+    }
+
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No data</td></tr>`;
+      return;
+    }
+
+    filtered.forEach(e => {
+      const thumbHtml = e.billFile && e.billFile.data ? `<img src="${e.billFile.data}" class="thumb">` : '';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(e.billDate)}</td>
+        <td>${escapeHtml(e.party)}</td>
+        <td>${escapeHtml(e.invoice)}</td>
+        <td>${thumbHtml}</td>
+        <td>
+          <button class="btn btn-sm btn-primary me-1" data-id="${e.id}" data-act="view"><i class="fa fa-eye"></i></button>
+          <button class="btn btn-sm btn-danger" data-id="${e.id}" data-act="delete"><i class="fa fa-trash"></i></button>
+        </td>
+      `;
+      tr.querySelector('button[data-act="view"]').onclick = () => showBill(e.id);
+      tr.querySelector('button[data-act="delete"]').onclick = () => deleteEntry(e.id);
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Delete entry
+  function deleteEntry(id) {
+    Swal.fire({ icon: 'warning', text: 'Delete this entry?', showCancelButton: true }).then(r => {
+      if (!r.isConfirmed) return;
+      let arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]');
+      arr = arr.filter(x => x.id !== id);
+      localStorage.setItem(ENTRIES_KEY, JSON.stringify(arr));
+      renderAdmin(); renderMyEntries(); renderParties();
+      Swal.fire({ icon: 'success', text: 'Deleted', timer: 1000, showConfirmButton: false });
+    });
+  }
+
+  // Show bill details in modal (and PDF setup)
+  window.showBill = (id) => {
+    const arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]');
+    const e = arr.find(x => x.id === id);
+    if (!e) return Swal.fire({ icon: 'error', text: 'Entry not found' });
+
+    document.getElementById('modalTitle').textContent = `${e.party} — ${e.invoice}`;
+
+    const imagesHtml = (fileObj, label) => {
+      if (!fileObj || !fileObj.data) return '';
+      return `
+        <div class="mb-3">
+          <div class="small-muted mb-1">${label}</div>
+          <img src="${fileObj.data}" style="width:100%;max-height:320px;object-fit:contain;border:1px solid #eee;padding:6px;border-radius:6px;">
+        </div>
+      `;
+    };
+
+    document.getElementById('modalBody').innerHTML = `
+      <div class="row">
+        <div class="col-md-6">
+          <h5 style="margin:0;">${escapeHtml(e.party)}</h5>
+          <p style="margin:.25rem 0;">
+            <strong>Invoice:</strong> ${escapeHtml(e.invoice)}<br>
+            <strong>Date:</strong> ${escapeHtml(e.billDate)}<br>
+            <strong>Saved By:</strong> ${escapeHtml(e.createdBy || '-') }<br>
+            <strong>Saved At:</strong> ${escapeHtml(e.createdAt || '-') }
+          </p>
+          <table style="width:100%;border-collapse:collapse">
+            <tr><td style="padding:6px;border:1px solid #eee"><strong>Qty (Bill)</strong></td><td style="padding:6px;border:1px solid #eee">${e.qtyBill}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #eee"><strong>Qty (Rec)</strong></td><td style="padding:6px;border:1px solid #eee">${e.qtyRec}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #eee"><strong>Received By</strong></td><td style="padding:6px;border:1px solid #eee">${escapeHtml(e.receivedBy)}</td></tr>
+            <tr><td style="padding:6px;border:1px solid #eee"><strong>Vehicle</strong></td><td style="padding:6px;border:1px solid #eee">${escapeHtml(e.vehicle||'-')}</td></tr>
+          </table>
+          <p class="small-muted mt-2"><strong>Remarks:</strong> ${escapeHtml(e.remarks||'-')}</p>
+        </div>
+        <div class="col-md-6">
+          ${imagesHtml(e.billFile, 'Bill Image')}
+          ${imagesHtml(e.matFile, 'Material Image')}
+          ${imagesHtml(e.drvFile, 'Driver Image')}
+        </div>
+      </div>
+    `;
+
+    // Setup PDF button
+    document.getElementById('downloadPdf').onclick = async () => {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.setFontSize(12);
+      let y = 10;
+      pdf.text(`Party: ${e.party}`, 10, y); y += 8;
+      pdf.text(`Invoice: ${e.invoice}`, 10, y); y += 8;
+      pdf.text(`Date: ${e.billDate}`, 10, y); y += 8;
+      pdf.text(`Qty (Bill/Rec): ${e.qtyBill} / ${e.qtyRec}`, 10, y); y += 8;
+      pdf.text(`Received By: ${e.receivedBy}`, 10, y); y += 8;
+      pdf.text(`Vehicle: ${e.vehicle || '-'}`, 10, y); y += 8;
+      pdf.text(`Remarks: ${e.remarks || '-'}`, 10, y); y += 12;
+
+      // images: try to place 3 across if space, else stack
+      const addImg = (fileObj, x, yy, w, h) => {
+        if (!fileObj || !fileObj.data) return false;
+        try { pdf.addImage(fileObj.data, 'JPEG', x, yy, w, h); return true; }
+        catch (err) {
+          try { pdf.addImage(fileObj.data, 'PNG', x, yy, w, h); return true; }
+          catch (e2) { return false; }
+        }
+      };
+
+      const pageWidthMM = 210;
+      const margin = 10;
+      const imgW = 60; const imgH = 60;
+      let xcursor = margin;
+      let ycursor = y;
+      // attempt to add three images horizontally
+      const files = [e.billFile, e.matFile, e.drvFile];
+      files.forEach((f, idx) => {
+        if (addImg(f, xcursor, ycursor, imgW, imgH)) {
+          xcursor += imgW + 10;
+          if (xcursor + imgW > pageWidthMM - margin) { xcursor = margin; ycursor += imgH + 10; }
+        }
+      });
+
+      pdf.save(`${e.party.replaceAll(/[^a-z0-9]/ig,'_')}_${e.invoice}.pdf`);
+    };
+
+    new bootstrap.Modal(document.getElementById('viewModal')).show();
+  };
+
+  // Export CSV (without images)
+  document.getElementById('exportCsv').onclick = () => {
+    const arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]');
+    if (!arr.length) return Swal.fire({ icon: 'info', text: 'No data' });
+    const keys = ['id','billDate','party','invoice','qtyBill','qtyRec','receivedBy','vehicle','remarks','createdBy','createdAt'];
+    const rows = [keys.join(',')];
+    arr.forEach(r => rows.push(keys.map(k => `"${(r[k]||'').toString().replaceAll('"','""')}"`).join(',')));
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'pictura_entries.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Clear all entries (keeps login)
+  document.getElementById('clearAll').onclick = () => {
+    Swal.fire({ icon: 'warning', text: 'Clear all saved entries? This cannot be undone.', showCancelButton: true })
+      .then(r => { if (r.isConfirmed) { localStorage.removeItem(ENTRIES_KEY); renderAdmin(); renderMyEntries(); renderParties(); Swal.fire({ icon: 'success', text: 'All cleared', timer: 1000, showConfirmButton: false }); } });
+  };
+
+  // Filters event listeners
+  ['fromDate','toDate','partyFilter','searchFilter'].forEach(id => {
+    document.getElementById(id).addEventListener('input', renderAdmin);
+  });
+
+  // Tabs
+  document.getElementById('tabAll').addEventListener('click', ev => {
+    ev.preventDefault();
+    document.getElementById('tabAll').classList.add('active');
+    document.getElementById('tabParty').classList.remove('active');
+    document.getElementById('tableBox').style.display = 'block';
+    document.getElementById('partyBox').style.display = 'none';
+    renderAdmin();
+  });
+  document.getElementById('tabParty').addEventListener('click', ev => {
+    ev.preventDefault();
+    document.getElementById('tabParty').classList.add('active');
+    document.getElementById('tabAll').classList.remove('active');
+    document.getElementById('tableBox').style.display = 'none';
+    document.getElementById('partyBox').style.display = 'block';
+    renderParties();
+  });
+
+  // Render parties (unique)
+  function renderParties() {
+    const arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]');
+    const unique = Array.from(new Set(arr.map(x => (x.party || '').trim()))).filter(Boolean).sort((a,b)=>a.localeCompare(b));
+    const list = document.getElementById('partyList'); list.innerHTML = '';
+    document.getElementById('partyBills').innerHTML = '';
+    if (!unique.length) { list.innerHTML = `<li class="list-group-item text-center text-muted">No parties</li>`; return; }
+    unique.forEach(p => {
+      const li = document.createElement('li'); li.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+      li.innerHTML = `<span>${p}</span><span class="badge bg-primary rounded-pill">${arr.filter(x => x.party.trim() === p).length}</span>`;
+      li.onclick = () => showPartyBills(p);
+      list.appendChild(li);
+    });
+  }
+
+  // show bills for a party
+  function showPartyBills(party) {
+    const arr = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]');
+    const bills = arr.filter(x => (x.party || '').trim() === party.trim());
+    const holder = document.getElementById('partyBills');
+    if (!bills.length) { holder.innerHTML = `<div class="text-muted">No bills for ${escapeHtml(party)}</div>`; return; }
+    holder.innerHTML = `<h6>Bills for ${escapeHtml(party)}</h6>` +
+      `<table class="table table-sm table-striped"><thead><tr><th>Date</th><th>Invoice</th><th>Q(Bill)</th><th>Q(Rec)</th><th>Actions</th></tr></thead><tbody>` +
+      bills.map(b => `<tr>
+        <td>${escapeHtml(b.billDate)}</td>
+        <td>${escapeHtml(b.invoice)}</td>
+        <td>${b.qtyBill}</td>
+        <td>${b.qtyRec}</td>
+        <td><button class="btn btn-sm btn-primary" data-id="${b.id}">View</button></td>
+      </tr>`).join('') + `</tbody></table>`;
+    // wire view buttons
+    holder.querySelectorAll('button[data-id]').forEach(btn => btn.onclick = () => showBill(btn.getAttribute('data-id')));
+  }
+
+  // Logout - only clear login info, keep data
+  document.getElementById('logoutData').onclick = document.getElementById('logoutAdmin').onclick = () => {
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(ROLE_KEY);
+    location.reload();
+  };
+
+  // Auto restore if already logged in
+  if (localStorage.getItem(ROLE_KEY) && localStorage.getItem(USER_KEY)) loadApp();
+
+  // make some functions available for debugging
+  window.renderAdmin = renderAdmin;
+  window.renderMyEntries = renderMyEntries;
+  window.renderParties = renderParties;
+
+})();
+</script>
+</body>
+</html>
